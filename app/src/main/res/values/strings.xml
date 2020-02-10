@@ -1,0 +1,21 @@
+<resources>
+    <string name="app_name">Contacts2</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="titulo_nuevo_contacto">Nuevo Contacto</string>
+    <string name="titulo_buscar_contacto">Buscar Contacto</string>
+    <string name="titulo_cambiar_vista">Cambiar Vista</string>
+
+
+    <string name="titulo_edad">Edad</string>
+    <string name="titulo_peso">Peso</string>
+    <string name="titulo_telefono">Telefono</string>
+    <string name="titulo_direccion">Direccion</string>
+    <string name="titulo_email">EMail</string>
+
+    <string name="titulo_eliminarContacto">Eliminar Contacto</string>
+    <string name="titulo_modificarContacto">Modificar Contacto</string>
+    <string name="addContact">Add Contact</string>
+</resources>
