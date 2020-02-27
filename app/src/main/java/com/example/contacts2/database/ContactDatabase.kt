@@ -6,11 +6,11 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 
 
-@Database(entities = [ContactListTable::class], version = 1, exportSchema = false)
+@Database(entities = [Contact::class], version = 1, exportSchema = false)
 abstract class ContactDatabase : RoomDatabase() {
 
     //Asocio el DAO que es el unico que tengo en esta app
-    abstract fun contactDao(): ContactDao
+    abstract val contactDao: ContactDao
 
     //Permite que los clientes accedan  a los metodos para crear u obtener la database sin instanciar la clase
     companion object {
@@ -31,6 +31,7 @@ abstract class ContactDatabase : RoomDatabase() {
                     )
 
                         .fallbackToDestructiveMigration()
+                        .allowMainThreadQueries() //chequear esto porque sino no anda
                         .build()
 
                     INSTANCE = instance

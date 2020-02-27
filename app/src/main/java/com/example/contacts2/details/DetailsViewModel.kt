@@ -2,10 +2,8 @@ package com.example.contacts2.details
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import com.example.contacts2.database.Contact
 import com.example.contacts2.database.ContactDatabase
-import com.example.contacts2.main.Contact
 
 
 class DetailsViewModel(
@@ -14,18 +12,35 @@ class DetailsViewModel(
 ) : AndroidViewModel(application) {
 
 
-    lateinit var contacto: Contact
-    private val _contactoLv = MutableLiveData<Contact>()
-    val contactoLv: LiveData<Contact> get() = _contactoLv
+    var contacId = 0L //esta id tiene que pasarla el list cuando tocas un contacto
+    lateinit var showContact: Contact
+    lateinit var contactToDelete: Contact
+
+//    private val _showContactLv : MutableLiveData<Contact>
+//    val showContactLv: LiveData<Contact> get() = _showContactLv
+
 
 
     init {
-        contacto = Contact("Daniel", "Orsi", "Freelance", "Adrogue", "58852", "daniel@ho.com")
 
-        _contactoLv.postValue(contacto)
+//        _showContactLv = database.contactDao.get(contacId)
 
 
     }
+
+    fun getContactForShow(contactId: Long): Contact {
+        showContact = database.contactDao.get(contactId)
+
+        return showContact
+    }
+
+    fun deleteContact(contactId: Long) {
+        contactToDelete = getContactForShow(contactId)
+        database.contactDao.delete(contactToDelete)
+    }
+
+
+
 
 
 }

@@ -19,12 +19,12 @@
     </fragment>
     <fragment
         android:id="@+id/newContact"
-        android:name="com.example.contacts2.newContact.NewContact"
+        android:name="com.example.contacts2.newContact.New_Fragment"
         android:label="fragment_new_contact"
         tools:layout="@layout/fragment_new_contact">
         <action
             android:id="@+id/action_newContact_to_list"
-            app:destination="@id/list" />
+            app:destination="@+id/list" />
     </fragment>
     <fragment
         android:id="@+id/details"

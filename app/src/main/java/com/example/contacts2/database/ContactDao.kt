@@ -2,7 +2,7 @@ package com.example.contacts2.database
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
-import com.example.contacts2.main.Contact
+
 
 
 @Dao
@@ -23,7 +23,7 @@ interface ContactDao {
 
     //3.1- Especifico una funcion que consulte la fila con el ID key
     @Query("SELECT * from complete_contact_list_table WHERE contactId = :key")
-    fun get(key: Long): ContactListTable
+    fun get(key: Long): Contact
 
     //3.2- Especifico una funcion para borrar todas las filas sin borrar la tabla
     @Query("DELETE FROM complete_contact_list_table")
@@ -35,7 +35,7 @@ interface ContactDao {
 
     //3.4- Especifico una funcion que me de la ultima
     @Query("SELECT * FROM complete_contact_list_table ORDER BY contactId DESC LIMIT 1")
-    fun getContacts(): List<ContactListTable>
+    fun getContacts(): List<Contact>
 
 
 }

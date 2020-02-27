@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.contacts2.R
+import com.example.contacts2.database.Contact
 
 
 class CustomAdapter(contactos: List<Contact>) :
@@ -21,8 +22,8 @@ class CustomAdapter(contactos: List<Contact>) :
         this.copyContacts = contactos
     }
 
-    fun setContacts(contacts: List<Contact>) {
-        contactos = contacts
+    fun setContacts(contactList: List<Contact>) {
+        contactos = contactList
         notifyDataSetChanged()
     }
 

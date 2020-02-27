@@ -11,17 +11,18 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.contacts2.R
+import com.example.contacts2.database.Contact
+import com.example.contacts2.database.ContactDatabase
 import com.example.contacts2.databinding.FragmentListBinding
 
 
 class List_Fragment : Fragment() {
 
     private lateinit var listViewModel: ListViewModel
-
-    var lista: RecyclerView? = null
-    var adaptador: CustomAdapter? = null
-    var layoutManager: RecyclerView.LayoutManager? = null
-    var listaParaMostrar: List<Contact> = arrayListOf()
+    private lateinit var list: RecyclerView
+    private lateinit var adapter: CustomAdapter
+    private lateinit var layoutManager: RecyclerView.LayoutManager
+    private var contactList: List<Contact> = arrayListOf()
 
 
     override fun onCreateView(
@@ -29,35 +30,55 @@ class List_Fragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
+
+
+        //Define el dataSource
+        val application = requireNotNull(this.activity).application
+//        ContactDatabase.getInstance(application).contactDao
+
+        //Crea instancia de la ViewModelFactory
+        val dataSource = ContactDatabase.getInstance(application).contactDao
+        val viewModelFactory = ListViewModelFactory(dataSource, application)
+
+        // Get a reference to the ViewModel associated with this fragment.
+        listViewModel =
+            ViewModelProviders.of(this, viewModelFactory).get(ListViewModel::class.java)
+
+
+        // Inflate the layout for this fragment and obtain an instance of binding class
         val binding: FragmentListBinding = DataBindingUtil.inflate(
             inflater,
             R.layout.fragment_list, container, false
         )
 
-        listViewModel = ViewModelProviders.of(this).get(ListViewModel::class.java)
+        binding.setLifecycleOwner(this)
+        binding.listViewModel = listViewModel
 
 
-
-        lista = binding.rvList
-        lista?.setHasFixedSize(true)
+        list = binding.rvList
+        list.setHasFixedSize(true)
 
         layoutManager = LinearLayoutManager(requireContext())
-        lista?.layoutManager = layoutManager
+        list.layoutManager = layoutManager
 
 
-
+        //observes if the list has changed and passes the list to show
         listViewModel.allContacts.observe(viewLifecycleOwner, Observer { allContacts ->
-            listaParaMostrar = allContacts
-            adaptador?.setContacts(allContacts)
+            contactList = allContacts
+            adapter.setContacts(contactList)
+        })
+
+        adapter = CustomAdapter(contactList)
+        list.adapter = adapter
+
+        list.setOnClickListener(View.OnClickListener {
+            val id = getId()
+
         })
 
 
-        adaptador = CustomAdapter(listaParaMostrar)
-        lista?.adapter = adaptador
 
         setHasOptionsMenu(true)
-
         return binding.root
     }
 
@@ -66,6 +87,7 @@ class List_Fragment : Fragment() {
         super.onCreateOptionsMenu(menu, inflater)
         inflater.inflate(R.menu.main_menu, menu)
     }
+
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
@@ -76,13 +98,10 @@ class List_Fragment : Fragment() {
                 return true
             }
 
-            R.id.btDetails -> {
-                findNavController().navigate(
-                    R.id.action_list_to_details
-                )
+            R.id.btClear -> {
+                listViewModel.deleteAll()
                 return true
             }
-
 
             else -> {
                 return super.onOptionsItemSelected(item)

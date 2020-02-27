@@ -6,10 +6,12 @@ import android.view.*
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.fragment.findNavController
 import com.example.contacts2.R
+import com.example.contacts2.database.Contact
 import com.example.contacts2.database.ContactDatabase
 import com.example.contacts2.databinding.FragmentDetailsBinding
-import com.example.contacts2.main.Contact
+
 
 /**
  * A simple [Fragment] subclass.
@@ -19,7 +21,7 @@ class Details : Fragment() {
     private lateinit var detailsViewModel: DetailsViewModel
 
 
-    lateinit var contacto: Contact
+    lateinit var showContact: Contact
 
 
     override fun onCreateView(
@@ -42,25 +44,27 @@ class Details : Fragment() {
         // Conexion con ViewModel y Datasource
 
         val applicacion = requireNotNull(this.activity).application
-        ContactDatabase.getInstance(applicacion).contactDao()
+        ContactDatabase.getInstance(applicacion).contactDao
 
-        val dataSource = ContactDatabase.getInstance(applicacion).contactDao()
+        val dataSource = ContactDatabase.getInstance(applicacion).contactDao
 
         val detailsViewModel = ViewModelProviders.of(this).get(DetailsViewModel::class.java)
 
         // binding.detailsViewModel = detailsViewModel
 
-//        DetailsViewModel.contactoLv.observe(viewLifecycleOwner, Observer { contactLv ->
-//            contacto = contactLv
+//        DetailsViewModel.showContactLv.observe(viewLifecycleOwner, Observer { showContactLv ->
+//            showContact = showContactLv
 //
 //        })
-//
-//        binding.tvNombre.text = contacto.name
-//        binding.tvApellido.text = contacto.surname
-//        binding.tvEmpresa.text = contacto.job
-//        binding.tvTelefono.text = contacto.tel
-//        binding.tvEmail.text = contacto.email
-//        binding.tvDireccion.text = contacto.adress
+
+        var showContact: Contact = DetailsViewModel.getContactForShow(contacId)
+
+        binding.tvNombre.text = showContact.name
+        binding.tvApellido.text = showContact.surname
+        binding.tvEmpresa.text = showContact.job
+        binding.tvTelefono.text = showContact.tel
+        binding.tvEmail.text = showContact.eMail
+        binding.tvDireccion.text = showContact.adress
 
 
         setHasOptionsMenu(true)
@@ -74,6 +78,29 @@ class Details : Fragment() {
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
         inflater.inflate(R.menu.details_menu, menu)
+    }
+
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.bt_delete -> {
+
+                DetailsViewModel.deleteContact(contactId)
+
+                findNavController().navigate(R.id.action_details_to_list)
+                return true
+            }
+
+            R.id.bt_edit -> {
+
+                //te lleva al menu NUEvo pero con los campos llenos de info, y podes editarlos
+                return true
+            }
+
+            else -> {
+                return super.onOptionsItemSelected(item)
+            }
+        }
     }
 }
 
